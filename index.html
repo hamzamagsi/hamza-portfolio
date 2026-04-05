@@ -623,42 +623,45 @@
     if (h && s < window.innerHeight) h.style.transform = 'translateY(' + (s * 0.15) + 'px)';
   });
 
-  // Contact form → mailto (opens Gmail / mail app with pre-filled message)
-  document.getElementById('cf-submit').addEventListener('click', function() {
-    var name     = document.getElementById('cf-name').value.trim();
-    var email    = document.getElementById('cf-email').value.trim();
-    var type     = document.getElementById('cf-type').value;
-    var message  = document.getElementById('cf-message').value.trim();
-    var feedback = document.getElementById('cf-feedback');
+ // Contact form → Gmail redirect
+document.getElementById('cf-submit').addEventListener('click', function() {
+  var name     = document.getElementById('cf-name').value.trim();
+  var email    = document.getElementById('cf-email').value.trim();
+  var type     = document.getElementById('cf-type').value;
+  var message  = document.getElementById('cf-message').value.trim();
+  var feedback = document.getElementById('cf-feedback');
 
-    if (!name || !email || !type || !message) {
-      feedback.style.display = 'block';
-      feedback.style.color   = '#c44b2b';
-      feedback.textContent   = 'Please fill in all fields before sending.';
-      return;
-    }
-
-    var subject = encodeURIComponent('New Project Inquiry - ' + type + ' | ' + name);
-    var body    = encodeURIComponent(
-      'Hi Hamza,\n\n' +
-      'My name is ' + name + ' and I am reaching out about a project.\n\n' +
-      'Project Type: ' + type + '\n' +
-      'My Email: ' + email + '\n\n' +
-      'Details:\n' + message + '\n\n' +
-      'Looking forward to working with you!'
-    );
-
-    window.location.href = 'mailto:hamzamagsi02@gmail.com?subject=' + subject + '&body=' + body;
-
+  if (!name || !email || !type || !message) {
     feedback.style.display = 'block';
-    feedback.style.color   = '#d4a853';
-    feedback.textContent   = 'Your mail app is opening - just hit Send!';
+    feedback.style.color   = '#c44b2b';
+    feedback.textContent   = 'Please fill in all fields before sending.';
+    return;
+  }
 
-    document.getElementById('cf-name').value    = '';
-    document.getElementById('cf-email').value   = '';
-    document.getElementById('cf-type').value    = '';
-    document.getElementById('cf-message').value = '';
-  });
+  var subject = encodeURIComponent('New Project Inquiry - ' + type + ' | ' + name);
+  var body    = encodeURIComponent(
+    'Hi Hamza,\n\n' +
+    'My name is ' + name + ' and I am reaching out about a project.\n\n' +
+    'Project Type: ' + type + '\n' +
+    'My Email: ' + email + '\n\n' +
+    'Details:\n' + message + '\n\n' +
+    'Looking forward to working with you!'
+  );
+
+  // ✅ Gmail redirect FIX
+  var gmailURL = 'https://mail.google.com/mail/?view=cm&fs=1&to=hamzamagsi02@gmail.com&su=' + subject + '&body=' + body;
+
+  window.open(gmailURL, '_blank');
+
+  feedback.style.display = 'block';
+  feedback.style.color   = '#d4a853';
+  feedback.textContent   = 'Gmail is opening - just hit Send!';
+
+  document.getElementById('cf-name').value    = '';
+  document.getElementById('cf-email').value   = '';
+  document.getElementById('cf-type').value    = '';
+  document.getElementById('cf-message').value = '';
+});
 </script>
 </body>
 </html>
