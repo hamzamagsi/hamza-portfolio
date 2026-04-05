@@ -1085,10 +1085,10 @@
       </p>
 
       <div class="contact-links reveal">
-        <a href="mailto:hamzamagsi02@gmail.com" class="contact-link">
+        <a href="/cdn-cgi/l/email-protection#1c747d71667d717d7b6f752c2e5c7b717d7570327f7371" class="contact-link">
           <div class="cl-left">
             <span class="cl-platform">Email</span>
-            <span class="cl-label">hamzamagsi02@gmail.com</span>
+            <span class="cl-label"><span class="__cf_email__" data-cfemail="d1b9b0bcabb0bcb0b6a2b8e1e391b6bcb0b8bdffb2bebc">[email&#160;protected]</span></span>
           </div>
           <span class="cl-arrow">↗</span>
         </a>
@@ -1126,13 +1126,13 @@
     <div class="contact-right reveal reveal-delay-1">
       <div class="contact-form">
         <div class="form-row">
-          <input type="text" placeholder="Your Name" />
+          <input id="cf-name" type="text" placeholder="Your Name" />
         </div>
         <div class="form-row">
-          <input type="email" placeholder="Email Address" />
+          <input id="cf-email" type="email" placeholder="Email Address" />
         </div>
         <div class="form-row">
-          <select style="color:rgba(244,240,232,0.4); font-family: var(--font-mono); font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; padding:1.4rem 0;">
+          <select id="cf-type" style="color:rgba(244,240,232,0.4); font-family: var(--font-mono); font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; padding:1.4rem 0;">
             <option value="" disabled selected>Project Type</option>
             <option>Short-Form Content (Reels/Shorts)</option>
             <option>Long-Form YouTube Video</option>
@@ -1142,11 +1142,12 @@
           </select>
         </div>
         <div class="form-row">
-          <textarea rows="4" placeholder="Tell me about your project..."></textarea>
+          <textarea id="cf-message" rows="4" placeholder="Tell me about your project..."></textarea>
         </div>
-        <button class="form-submit" onclick="alert('Thanks! I\'ll reply to your email within 24 hours.')">
+        <button class="form-submit" id="cf-submit">
           Send Message →
         </button>
+        <p id="cf-feedback" style="display:none; margin-top:1rem; font-family:var(--font-mono); font-size:0.65rem; letter-spacing:0.1em; color:var(--accent);"></p>
       </div>
     </div>
   </div>
@@ -1159,7 +1160,7 @@
   <a href="#home" class="footer-back">Back to Top ↑</a>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   // Custom cursor
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursorRing');
@@ -1179,6 +1180,41 @@
     requestAnimationFrame(animRing);
   }
   animRing();
+
+  // ── Contact form → mailto ──────────────────────────────────────
+  document.getElementById('cf-submit').addEventListener('click', () => {
+    const name    = document.getElementById('cf-name').value.trim();
+    const email   = document.getElementById('cf-email').value.trim();
+    const type    = document.getElementById('cf-type').value;
+    const message = document.getElementById('cf-message').value.trim();
+    const feedback = document.getElementById('cf-feedback');
+
+    // Basic validation
+    if (!name || !email || !type || !message) {
+      feedback.style.display = 'block';
+      feedback.style.color = '#c44b2b';
+      feedback.textContent = '⚠ Please fill in all fields before sending.';
+      return;
+    }
+
+    // Build the mailto URL — opens Gmail/mail app with everything pre-filled
+    const subject = encodeURIComponent(`New Project Inquiry — ${type} | ${name}`);
+    const body = encodeURIComponent(
+      `Hi Hamza,\n\nMy name is ${name} and I'm reaching out about a project.\n\n` +
+      `📌 Project Type: ${type}\n` +
+      `📧 My Email: ${email}\n\n` +
+      `📝 Details:\n${message}\n\n` +
+      `Looking forward to working with you!`
+    );
+
+    window.location.href = `mailto:hamzamagsi02@gmail.com?subject=${subject}&body=${body}`;
+
+    // Show success message
+    feedback.style.display = 'block';
+    feedback.style.color = 'var(--accent)';
+    feedback.textContent = '✓ Your mail app is opening — just hit Send!';
+  });
+  // ───────────────────────────────────────────────────────────────
 
   document.querySelectorAll('a, button, .service-card, .niche-row, .pricing-card, .work-card').forEach(el => {
     el.addEventListener('mouseenter', () => {
@@ -1214,12 +1250,4 @@
 
   // Subtle parallax on hero
   window.addEventListener('scroll', () => {
-    const scrollY = window.scrollY;
-    const heroName = document.querySelector('.hero-name');
-    if (heroName && scrollY < window.innerHeight) {
-      heroName.style.transform = `translateY(${scrollY * 0.15}px)`;
-    }
-  });
-</script>
-</body>
-</html>
+    
