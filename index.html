@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Hamza — Video Editor</title>
+<title>Hamza Magsi — Video Editor</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
@@ -45,7 +45,7 @@
     pointer-events: none;
     z-index: 9999;
     transform: translate(-50%, -50%);
-    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    transition: width 0.3s ease, height 0.3s ease;
     mix-blend-mode: difference;
   }
   .cursor-ring {
@@ -60,7 +60,6 @@
     transition: all 0.15s ease;
     opacity: 0.6;
   }
-  body:hover .cursor { opacity: 1; }
 
   /* Noise overlay */
   body::before {
@@ -83,7 +82,7 @@
     align-items: center;
     border-bottom: 1px solid var(--border);
     backdrop-filter: blur(20px);
-    background: rgba(8,8,8,0.7);
+    background: rgba(8,8,8,0.75);
   }
   .nav-logo {
     font-family: var(--font-display);
@@ -140,17 +139,14 @@
     position: relative;
     overflow: hidden;
   }
-
   .hero-bg {
     position: absolute; inset: 0;
-    background: 
-      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(212,168,83,0.06) 0%, transparent 60%),
+    background:
+      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(212,168,83,0.07) 0%, transparent 60%),
       radial-gradient(ellipse 60% 80% at 20% 80%, rgba(196,75,43,0.05) 0%, transparent 50%),
       linear-gradient(180deg, #080808 0%, #0a0a0a 100%);
     z-index: 0;
   }
-
-  /* Animated film strip lines */
   .hero-lines {
     position: absolute; top: 0; right: 8%; height: 100%;
     display: flex; gap: 3px; z-index: 0; opacity: 0.04;
@@ -179,7 +175,6 @@
     width: 40px; height: 1px;
     background: var(--accent);
   }
-
   .hero-name {
     position: relative; z-index: 1;
     font-family: var(--font-display);
@@ -194,7 +189,6 @@
     -webkit-text-stroke: 1px rgba(244,240,232,0.25);
     color: transparent;
   }
-
   .hero-sub {
     position: relative; z-index: 1;
     font-family: var(--font-serif);
@@ -233,24 +227,9 @@
     animation: fadeUp 1s ease 0.4s forwards;
     opacity: 0;
   }
-  .stat {
-    text-align: right;
-    border-right: 1px solid var(--accent);
-    padding-right: 1rem;
-  }
-  .stat-num {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    color: var(--white);
-    line-height: 1;
-  }
-  .stat-label {
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
+  .stat { text-align: right; border-right: 1px solid var(--accent); padding-right: 1rem; }
+  .stat-num { font-family: var(--font-display); font-size: 2.2rem; color: var(--white); line-height: 1; }
+  .stat-label { font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); }
 
   @keyframes fadeUp {
     from { opacity:0; transform:translateY(30px); }
@@ -267,8 +246,7 @@
   }
   .marquee-track {
     display: flex;
-    gap: 0;
-    animation: marquee 20s linear infinite;
+    animation: marquee 22s linear infinite;
     white-space: nowrap;
   }
   .marquee-item {
@@ -282,7 +260,7 @@
   .marquee-item span { color: var(--accent); margin-right: 2rem; }
   @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
 
-  /* SECTION BASICS */
+  /* SECTIONS */
   section { padding: 7rem 3rem; }
   .section-label {
     font-family: var(--font-mono);
@@ -293,11 +271,7 @@
     margin-bottom: 1rem;
     display: flex; align-items: center; gap: 1rem;
   }
-  .section-label::before {
-    content: '';
-    width: 30px; height: 1px;
-    background: var(--accent);
-  }
+  .section-label::before { content: ''; width: 30px; height: 1px; background: var(--accent); }
   .section-title {
     font-family: var(--font-display);
     font-size: clamp(2.5rem, 6vw, 5rem);
@@ -315,22 +289,13 @@
     align-items: center;
     margin-top: 4rem;
   }
-  .about-left p {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    color: var(--muted);
-    margin-bottom: 1.5rem;
-  }
+  .about-left p { font-size: 1.05rem; line-height: 1.8; color: var(--muted); margin-bottom: 1.5rem; }
   .about-left p strong { color: var(--white); font-weight: 600; }
   .about-left p em { color: var(--accent); font-style: normal; }
-
   .tools-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-top: 2rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--border);
+    border: 1px solid var(--border); margin-top: 2rem;
   }
   .tool-item {
     background: var(--card);
@@ -343,18 +308,8 @@
     transition: all 0.3s ease;
     display: flex; align-items: center; gap: 0.7rem;
   }
-  .tool-item::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+  .tool-item::before { content: ''; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; flex-shrink: 0; }
   .tool-item:hover { background: rgba(212,168,83,0.06); color: var(--white); }
-
-  .about-right {
-    position: relative;
-  }
   .about-card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -388,15 +343,117 @@
     text-transform: uppercase;
     color: var(--muted);
   }
-  .accent-corner {
-    position: absolute;
-    bottom: -1px; right: -1px;
-    width: 40px; height: 40px;
-    background: var(--accent);
+  .accent-corner { position: absolute; bottom: -1px; right: -1px; width: 40px; height: 40px; background: var(--accent); }
+
+  /* ===== PORTFOLIO / WORK ===== */
+  .work-section { background: var(--off-black); }
+
+  .work-intro {
+    max-width: 600px;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-top: 1rem;
+    margin-bottom: 4rem;
   }
 
+  .work-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+
+  .work-card {
+    background: var(--card);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
+  .work-card:hover { background: #161616; }
+
+  .video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    background: #000;
+  }
+  .video-wrapper iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+
+  .work-card-info {
+    padding: 1.8rem 2rem 2rem;
+    border-top: 1px solid var(--border);
+    position: relative;
+  }
+  .work-channel {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .work-channel::before {
+    content: '';
+    width: 18px; height: 1px;
+    background: var(--accent);
+  }
+  .work-title {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--white);
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+  }
+  .work-meta {
+    display: flex; gap: 0.5rem; flex-wrap: wrap;
+  }
+  .work-tag {
+    font-family: var(--font-mono);
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid rgba(212,168,83,0.25);
+    color: var(--accent);
+    padding: 0.2rem 0.6rem;
+  }
+  .work-card-num {
+    position: absolute;
+    top: 1.5rem; right: 2rem;
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    color: rgba(244,240,232,0.04);
+    line-height: 1;
+  }
+
+  .work-cta {
+    margin-top: 3rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid rgba(212,168,83,0.3);
+    padding: 0.9rem 1.8rem;
+    transition: all 0.3s ease;
+  }
+  .work-cta:hover { background: rgba(212,168,83,0.08); border-color: var(--accent); }
+
   /* SERVICES */
-  .services-section { background: var(--off-black); }
+  .services-section { background: var(--black); }
   .services-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -422,12 +479,7 @@
   }
   .service-card:hover { background: rgba(212,168,83,0.04); }
   .service-card:hover::after { width: 100%; }
-
-  .service-icon {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-    display: block;
-  }
+  .service-icon { font-size: 2rem; margin-bottom: 1.5rem; display: block; }
   .service-num {
     font-family: var(--font-display);
     font-size: 5rem;
@@ -445,15 +497,8 @@
     color: var(--white);
     margin-bottom: 1rem;
   }
-  .service-desc {
-    font-size: 0.85rem;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-  .service-tags {
-    display: flex; flex-wrap: wrap; gap: 0.4rem;
-    margin-top: 1.5rem;
-  }
+  .service-desc { font-size: 0.85rem; line-height: 1.7; color: var(--muted); }
+  .service-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 1.5rem; }
   .tag {
     font-family: var(--font-mono);
     font-size: 0.55rem;
@@ -465,12 +510,7 @@
   }
 
   /* NICHES */
-  .niches-section {}
-  .niches-list {
-    margin-top: 4rem;
-    display: flex;
-    flex-direction: column;
-  }
+  .niches-list { margin-top: 4rem; display: flex; flex-direction: column; }
   .niche-row {
     display: grid;
     grid-template-columns: 60px 1fr auto;
@@ -485,37 +525,16 @@
   }
   .niche-row::before {
     content: '';
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background: linear-gradient(90deg, transparent, rgba(212,168,83,0.03));
     transform: translateX(-100%);
     transition: transform 0.4s ease;
   }
   .niche-row:hover::before { transform: translateX(0); }
   .niche-row:hover .niche-name { color: var(--accent); }
-
-  .niche-num {
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    color: var(--muted);
-    letter-spacing: 0.1em;
-  }
-  .niche-name {
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem, 3.5vw, 3rem);
-    letter-spacing: 0.04em;
-    color: var(--white);
-    transition: color 0.3s ease;
-  }
-  .niche-desc {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-align: right;
-    max-width: 200px;
-  }
+  .niche-num { font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; }
+  .niche-name { font-family: var(--font-display); font-size: clamp(1.8rem, 3.5vw, 3rem); letter-spacing: 0.04em; color: var(--white); transition: color 0.3s ease; }
+  .niche-desc { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); text-align: right; max-width: 200px; }
 
   /* PROCESS */
   .process-section { background: var(--off-black); }
@@ -526,34 +545,12 @@
     margin-top: 4rem;
     border: 1px solid var(--border);
   }
-  .process-step {
-    padding: 3rem 2rem;
-    border-right: 1px solid var(--border);
-    position: relative;
-    transition: background 0.3s ease;
-  }
+  .process-step { padding: 3rem 2rem; border-right: 1px solid var(--border); position: relative; transition: background 0.3s ease; }
   .process-step:last-child { border-right: none; }
   .process-step:hover { background: rgba(212,168,83,0.03); }
-  .step-num {
-    font-family: var(--font-display);
-    font-size: 4rem;
-    color: rgba(212,168,83,0.15);
-    line-height: 1;
-    margin-bottom: 1.5rem;
-  }
-  .step-title {
-    font-size: 0.9rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--white);
-    margin-bottom: 0.8rem;
-  }
-  .step-desc {
-    font-size: 0.8rem;
-    line-height: 1.7;
-    color: var(--muted);
-  }
+  .step-num { font-family: var(--font-display); font-size: 4rem; color: rgba(212,168,83,0.15); line-height: 1; margin-bottom: 1.5rem; }
+  .step-title { font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--white); margin-bottom: 0.8rem; }
+  .step-desc { font-size: 0.8rem; line-height: 1.7; color: var(--muted); }
 
   /* PRICING */
   .pricing-grid {
@@ -564,16 +561,8 @@
     border: 1px solid var(--border);
     margin-top: 4rem;
   }
-  .pricing-card {
-    background: var(--card);
-    padding: 3rem 2.5rem;
-    position: relative;
-    overflow: hidden;
-    transition: background 0.3s ease;
-  }
-  .pricing-card.featured {
-    background: rgba(212,168,83,0.07);
-  }
+  .pricing-card { background: var(--card); padding: 3rem 2.5rem; position: relative; overflow: hidden; }
+  .pricing-card.featured { background: rgba(212,168,83,0.07); }
   .pricing-card.featured::before {
     content: 'MOST POPULAR';
     position: absolute;
@@ -586,196 +575,74 @@
     padding: 0.3rem 3rem;
     transform: rotate(45deg);
   }
-  .pricing-tier {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1rem;
-  }
-  .pricing-price {
-    font-family: var(--font-display);
-    font-size: 3.5rem;
-    color: var(--white);
-    line-height: 1;
-    margin-bottom: 0.5rem;
-  }
-  .pricing-price sup {
-    font-size: 1.5rem;
-    vertical-align: super;
-  }
-  .pricing-unit {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-    margin-bottom: 2rem;
-  }
-  .pricing-features {
-    list-style: none;
-    display: flex; flex-direction: column; gap: 0.8rem;
-    margin-bottom: 2.5rem;
-  }
-  .pricing-features li {
-    font-size: 0.8rem;
-    color: var(--muted);
-    display: flex; align-items: center; gap: 0.7rem;
-  }
-  .pricing-features li::before {
-    content: '→';
-    color: var(--accent);
-    font-family: var(--font-mono);
-    flex-shrink: 0;
-  }
+  .pricing-tier { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 1rem; }
+  .pricing-price { font-family: var(--font-display); font-size: 3.5rem; color: var(--white); line-height: 1; margin-bottom: 0.5rem; }
+  .pricing-price sup { font-size: 1.5rem; vertical-align: super; }
+  .pricing-unit { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 2rem; }
+  .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; margin-bottom: 2.5rem; }
+  .pricing-features li { font-size: 0.8rem; color: var(--muted); display: flex; align-items: center; gap: 0.7rem; }
+  .pricing-features li::before { content: '→'; color: var(--accent); font-family: var(--font-mono); flex-shrink: 0; }
   .pricing-btn {
-    display: block;
-    width: 100%;
-    padding: 0.9rem;
+    display: block; width: 100%; padding: 0.9rem;
     text-align: center;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
+    font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase;
     text-decoration: none;
     border: 1px solid var(--accent);
     color: var(--accent);
     transition: all 0.3s ease;
   }
-  .pricing-btn:hover, .pricing-card.featured .pricing-btn {
-    background: var(--accent);
-    color: var(--black);
-  }
-  .pricing-card.featured .pricing-btn:hover {
-    background: var(--cream);
-    border-color: var(--cream);
-  }
+  .pricing-btn:hover, .pricing-card.featured .pricing-btn { background: var(--accent); color: var(--black); }
+  .pricing-card.featured .pricing-btn:hover { background: var(--cream); border-color: var(--cream); }
 
   /* CONTACT */
-  .contact-section {
-    background: var(--off-black);
-    border-top: 1px solid var(--border);
-  }
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 6rem;
-    margin-top: 4rem;
-  }
-  .contact-big {
-    font-family: var(--font-display);
-    font-size: clamp(3rem, 7vw, 6rem);
-    line-height: 0.95;
-    letter-spacing: 0.02em;
-    color: var(--white);
-    margin-bottom: 2rem;
-  }
+  .contact-section { background: var(--off-black); border-top: 1px solid var(--border); }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; margin-top: 4rem; }
+  .contact-big { font-family: var(--font-display); font-size: clamp(3rem, 7vw, 6rem); line-height: 0.95; letter-spacing: 0.02em; color: var(--white); margin-bottom: 2rem; }
   .contact-big span { color: var(--accent); }
-  .contact-intro {
-    font-size: 0.9rem;
-    line-height: 1.8;
-    color: var(--muted);
-    margin-bottom: 2.5rem;
-    max-width: 380px;
-  }
-
-  .contact-links {
-    display: flex; flex-direction: column; gap: 0;
-  }
+  .contact-intro { font-size: 0.9rem; line-height: 1.8; color: var(--muted); margin-bottom: 2.5rem; max-width: 380px; }
+  .contact-links { display: flex; flex-direction: column; gap: 0; }
   .contact-link {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between;
     padding: 1.2rem 0;
     border-bottom: 1px solid var(--border);
-    text-decoration: none;
-    color: var(--white);
+    text-decoration: none; color: var(--white);
     transition: all 0.3s ease;
-    group: true;
   }
   .contact-link:hover { padding-left: 0.5rem; }
   .contact-link:hover .cl-label { color: var(--accent); }
   .contact-link:hover .cl-arrow { color: var(--accent); }
   .cl-left { display: flex; align-items: center; gap: 1.2rem; }
-  .cl-platform {
-    font-family: var(--font-mono);
-    font-size: 0.55rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--muted);
-    width: 80px;
-  }
-  .cl-label {
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--white);
-    transition: color 0.3s ease;
-  }
-  .cl-arrow {
-    font-size: 1rem;
-    color: var(--muted);
-    transition: all 0.3s ease;
-  }
+  .cl-platform { font-family: var(--font-mono); font-size: 0.55rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); width: 80px; }
+  .cl-label { font-family: var(--font-body); font-size: 0.9rem; font-weight: 600; color: var(--white); transition: color 0.3s ease; }
+  .cl-arrow { font-size: 1rem; color: var(--muted); transition: all 0.3s ease; }
 
-  .contact-right {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .contact-form {
-    display: flex; flex-direction: column; gap: 0;
-  }
-  .form-row {
-    position: relative;
-    border-bottom: 1px solid var(--border);
-  }
+  .contact-right { display: flex; flex-direction: column; justify-content: center; }
+  .contact-form { display: flex; flex-direction: column; gap: 0; }
+  .form-row { position: relative; border-bottom: 1px solid var(--border); }
   .form-row:first-child { border-top: 1px solid var(--border); }
-  .form-row input,
-  .form-row textarea,
-  .form-row select {
+  .form-row input, .form-row textarea, .form-row select {
     width: 100%;
-    background: transparent;
-    border: none;
-    outline: none;
+    background: transparent; border: none; outline: none;
     padding: 1.4rem 0;
-    font-family: var(--font-body);
-    font-size: 0.9rem;
-    color: var(--white);
-    resize: none;
-    appearance: none;
+    font-family: var(--font-body); font-size: 0.9rem; color: var(--white);
+    resize: none; appearance: none;
   }
-  .form-row input::placeholder,
-  .form-row textarea::placeholder {
+  .form-row input::placeholder, .form-row textarea::placeholder {
     color: var(--muted);
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase;
   }
   .form-row select option { background: var(--card); }
   .form-row::after {
-    content: '';
-    position: absolute;
-    bottom: -1px; left: 0;
-    width: 0; height: 1px;
-    background: var(--accent);
-    transition: width 0.4s ease;
+    content: ''; position: absolute; bottom: -1px; left: 0;
+    width: 0; height: 1px; background: var(--accent); transition: width 0.4s ease;
   }
   .form-row:focus-within::after { width: 100%; }
   .form-submit {
-    margin-top: 2rem;
-    padding: 1.1rem 2rem;
-    background: var(--accent);
-    color: var(--black);
+    margin-top: 2rem; padding: 1.1rem 2rem;
+    background: var(--accent); color: var(--black);
     border: none;
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    cursor: none;
-    transition: background 0.3s ease;
-    align-self: flex-start;
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase;
+    cursor: none; transition: background 0.3s ease; align-self: flex-start;
   }
   .form-submit:hover { background: var(--cream); }
 
@@ -783,46 +650,22 @@
   footer {
     border-top: 1px solid var(--border);
     padding: 2rem 3rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; justify-content: space-between; align-items: center;
   }
-  .footer-logo {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-  }
+  .footer-logo { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: 0.1em; color: var(--muted); }
   .footer-logo span { color: var(--accent); }
-  .footer-copy {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.1em;
-    color: var(--muted);
-  }
-  .footer-back {
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
+  .footer-copy { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted); }
+  .footer-back { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.3s ease; }
   .footer-back:hover { color: var(--accent); }
 
-  /* ANIMATIONS on scroll */
-  .reveal {
-    opacity: 0;
-    transform: translateY(40px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.7s ease, transform 0.7s ease; }
   .reveal.visible { opacity: 1; transform: translateY(0); }
   .reveal-delay-1 { transition-delay: 0.1s; }
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
 
-  /* responsive tweaks */
+  /* RESPONSIVE */
   @media (max-width: 900px) {
     nav { padding: 1.2rem 1.5rem; }
     .nav-links { display: none; }
@@ -832,6 +675,9 @@
     .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
     .services-grid, .pricing-grid { grid-template-columns: 1fr; }
     .process-steps { grid-template-columns: 1fr 1fr; }
+    .work-grid { grid-template-columns: 1fr; }
+    .niche-row { grid-template-columns: 40px 1fr; }
+    .niche-desc { display: none; }
     footer { flex-direction: column; gap: 1rem; text-align: center; }
   }
 </style>
@@ -846,9 +692,9 @@
   <a href="#" class="nav-logo">HAM<span>ZA</span></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#niches">Niches</a></li>
-    <li><a href="#process">Process</a></li>
     <li><a href="#pricing">Pricing</a></li>
   </ul>
   <a href="#contact" class="nav-cta">Let's Work</a>
@@ -876,12 +722,12 @@
     </div>
   </div>
 
-  <div class="hero-tag">Video Editor & Content Creator</div>
+  <div class="hero-tag">Video Editor & Content Creator · Karachi, PK</div>
   <h1 class="hero-name">
     HAMZA<br><span class="outline">EDITS.</span>
   </h1>
   <p class="hero-sub">
-    Turning raw footage into <em>cinematic stories</em> — <br>
+    Turning raw footage into <em>cinematic stories</em> —<br>
     Long-form documentaries to short-form viral content.
   </p>
 
@@ -903,6 +749,8 @@
     <span class="marquee-item"><span>✦</span> Reels & Shorts</span>
     <span class="marquee-item"><span>✦</span> Podcast Editing</span>
     <span class="marquee-item"><span>✦</span> Sound Design</span>
+    <span class="marquee-item"><span>✦</span> Tech Triumph</span>
+    <span class="marquee-item"><span>✦</span> Brother Invest</span>
     <span class="marquee-item"><span>✦</span> Adobe Premiere Pro</span>
     <span class="marquee-item"><span>✦</span> After Effects</span>
     <span class="marquee-item"><span>✦</span> Adobe Audition</span>
@@ -912,6 +760,8 @@
     <span class="marquee-item"><span>✦</span> Reels & Shorts</span>
     <span class="marquee-item"><span>✦</span> Podcast Editing</span>
     <span class="marquee-item"><span>✦</span> Sound Design</span>
+    <span class="marquee-item"><span>✦</span> Tech Triumph</span>
+    <span class="marquee-item"><span>✦</span> Brother Invest</span>
   </div>
 </div>
 
@@ -922,8 +772,8 @@
 
   <div class="about-grid">
     <div class="about-left reveal">
-      <p>I'm <strong>Hamza</strong> — a freelance video editor based in <em>Karachi, Pakistan</em> with 3+ years of professional experience crafting content that actually gets watched.</p>
-      <p>I work with creators, brands, and businesses across the globe, specializing in everything from <strong>high-retention YouTube documentaries</strong> to <strong>viral short-form reels</strong> across multiple niches.</p>
+      <p>I'm <strong>Hamza Magsi</strong> — a freelance video editor based in <em>Karachi, Pakistan</em> with 3+ years of professional experience crafting content that actually gets watched.</p>
+      <p>I've worked with YouTube channels like <strong>Tech Triumph</strong> and <strong>Brother Invest</strong>, delivering polished long-form content across tech and finance niches — and I bring that same standard to every project.</p>
       <p>My editing isn't just cuts and transitions — it's <em>storytelling</em>. Every second on screen should earn its place.</p>
 
       <div class="tools-grid">
@@ -942,12 +792,77 @@
           "Every frame is a decision. Every cut is intentional. I don't just edit — I engineer the emotion the audience feels."
         </blockquote>
         <div class="about-card-footer">
-          Hamza · Freelance Video Editor · Karachi, PK
+          Hamza Magsi · Freelance Video Editor · Karachi, PK
         </div>
         <div class="accent-corner"></div>
       </div>
     </div>
   </div>
+</section>
+
+<!-- WORK / PORTFOLIO -->
+<section id="work" class="work-section">
+  <div class="section-label">Selected Work</div>
+  <h2 class="section-title reveal">Real Projects.<br>Real Results.</h2>
+  <p class="work-intro reveal">
+    Here's a look at videos I've edited for YouTube channels in the tech and finance space. Each project is crafted for maximum retention, clean pacing, and professional polish.
+  </p>
+
+  <div class="work-grid">
+
+    <!-- Video 1: Tech Triumph -->
+    <div class="work-card reveal">
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/2xzLTAaatrM?rel=0&modestbranding=1&color=white"
+          title="Tech Triumph — Edited by Hamza"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="work-card-info">
+        <div class="work-channel">Tech Triumph</div>
+        <div class="work-title">Tech Content — Long-Form YouTube Video</div>
+        <div class="work-meta">
+          <span class="work-tag">Long-Form</span>
+          <span class="work-tag">Tech Niche</span>
+          <span class="work-tag">Color Graded</span>
+          <span class="work-tag">Motion Graphics</span>
+        </div>
+        <div class="work-card-num">01</div>
+      </div>
+    </div>
+
+    <!-- Video 2: Brother Invest -->
+    <div class="work-card reveal reveal-delay-1">
+      <div class="video-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/Gz57nS2-JQM?rel=0&modestbranding=1&color=white"
+          title="Brother Invest — Edited by Hamza"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="work-card-info">
+        <div class="work-channel">Brother Invest</div>
+        <div class="work-title">Finance & Investing — Retention-Optimized Edit</div>
+        <div class="work-meta">
+          <span class="work-tag">Long-Form</span>
+          <span class="work-tag">Finance Niche</span>
+          <span class="work-tag">Sound Design</span>
+          <span class="work-tag">B-Roll</span>
+        </div>
+        <div class="work-card-num">02</div>
+      </div>
+    </div>
+
+  </div>
+
+  <a href="https://www.upwork.com/freelancers/~01ea6e2d92f6f7520e" target="_blank" class="work-cta reveal">
+    View Full Portfolio on Upwork ↗
+  </a>
 </section>
 
 <!-- SERVICES -->
@@ -1166,42 +1081,42 @@
         Let's Build<br>Something <span>Great.</span>
       </h2>
       <p class="contact-intro reveal">
-        Whether you're a creator, brand, or agency — I'm open to new projects, collaborations, and conversations. Reach out through any channel below.
+        Whether you're a creator, brand, or agency — I'm open to new projects, collaborations, and long-term partnerships. Find me on any platform below.
       </p>
 
       <div class="contact-links reveal">
-        <a href="mailto:hamza@email.com" class="contact-link">
+        <a href="mailto:hamzamagsi02@gmail.com" class="contact-link">
           <div class="cl-left">
             <span class="cl-platform">Email</span>
-            <span class="cl-label">hamza@email.com</span>
+            <span class="cl-label">hamzamagsi02@gmail.com</span>
           </div>
           <span class="cl-arrow">↗</span>
         </a>
-        <a href="https://upwork.com/freelancers/hamza" target="_blank" class="contact-link">
+        <a href="https://www.upwork.com/freelancers/~01ea6e2d92f6f7520e" target="_blank" class="contact-link">
           <div class="cl-left">
             <span class="cl-platform">Upwork</span>
-            <span class="cl-label">Hamza — Top Rated</span>
+            <span class="cl-label">Hamza Magsi — Freelancer</span>
           </div>
           <span class="cl-arrow">↗</span>
         </a>
-        <a href="https://instagram.com/hamza.edits" target="_blank" class="contact-link">
+        <a href="https://instagram.com/hamzamagsi__11" target="_blank" class="contact-link">
           <div class="cl-left">
             <span class="cl-platform">Instagram</span>
-            <span class="cl-label">@hamza.edits</span>
+            <span class="cl-label">@hamzamagsi__11</span>
           </div>
           <span class="cl-arrow">↗</span>
         </a>
-        <a href="https://linkedin.com/in/hamza" target="_blank" class="contact-link">
+        <a href="https://x.com/hamzamagsi_4" target="_blank" class="contact-link">
+          <div class="cl-left">
+            <span class="cl-platform">Twitter / X</span>
+            <span class="cl-label">@hamzamagsi_4</span>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a href="https://www.linkedin.com/in/hamza-shams-372934147/" target="_blank" class="contact-link">
           <div class="cl-left">
             <span class="cl-platform">LinkedIn</span>
-            <span class="cl-label">Hamza — Video Editor</span>
-          </div>
-          <span class="cl-arrow">↗</span>
-        </a>
-        <a href="https://wa.me/923001234567" target="_blank" class="contact-link">
-          <div class="cl-left">
-            <span class="cl-platform">WhatsApp</span>
-            <span class="cl-label">+92 300 123 4567</span>
+            <span class="cl-label">Hamza Shams — Video Editor</span>
           </div>
           <span class="cl-arrow">↗</span>
         </a>
@@ -1229,7 +1144,7 @@
         <div class="form-row">
           <textarea rows="4" placeholder="Tell me about your project..."></textarea>
         </div>
-        <button class="form-submit" onclick="alert('Message sent! I\'ll get back to you within 24 hours.')">
+        <button class="form-submit" onclick="alert('Thanks! I\'ll reply to your email within 24 hours.')">
           Send Message →
         </button>
       </div>
@@ -1240,7 +1155,7 @@
 <!-- FOOTER -->
 <footer>
   <div class="footer-logo">HAM<span>ZA</span></div>
-  <div class="footer-copy">© 2025 Hamza · Video Editor · Karachi, Pakistan</div>
+  <div class="footer-copy">© 2025 Hamza Magsi · Video Editor · Karachi, Pakistan</div>
   <a href="#home" class="footer-back">Back to Top ↑</a>
 </footer>
 
@@ -1265,20 +1180,18 @@
   }
   animRing();
 
-  document.querySelectorAll('a, button, .service-card, .niche-row, .pricing-card').forEach(el => {
+  document.querySelectorAll('a, button, .service-card, .niche-row, .pricing-card, .work-card').forEach(el => {
     el.addEventListener('mouseenter', () => {
       cursor.style.width = '20px';
       cursor.style.height = '20px';
       ring.style.width = '60px';
       ring.style.height = '60px';
-      ring.style.borderColor = 'var(--accent)';
     });
     el.addEventListener('mouseleave', () => {
       cursor.style.width = '10px';
       cursor.style.height = '10px';
       ring.style.width = '36px';
       ring.style.height = '36px';
-      ring.style.borderColor = 'var(--accent)';
     });
   });
 
@@ -1286,25 +1199,20 @@
   const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-      }
+      if (e.isIntersecting) e.target.classList.add('visible');
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0.1 });
   reveals.forEach(r => observer.observe(r));
 
-  // Smooth scroll for nav links
+  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth' });
-      }
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth' }); }
     });
   });
 
-  // Parallax hero name very subtle
+  // Subtle parallax on hero
   window.addEventListener('scroll', () => {
     const scrollY = window.scrollY;
     const heroName = document.querySelector('.hero-name');
