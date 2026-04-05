@@ -656,7 +656,7 @@ if (isMobile) {
 } else {
   // Desktop → open Gmail in browser
   var gmailURL = 'https://mail.google.com/mail/?view=cm&fs=1&to=hamzamagsi02@gmail.com&su=' + subject + '&body=' + body;
-  window.location.href = gmailURL;
+ window.open(gmailURL, '_blank');
 }
 
     feedback.style.display = 'block';
