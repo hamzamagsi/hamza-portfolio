@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Hamza — Video Editor</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Syne:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --off-black: #0e0e0e;
+    --card: #111111;
+    --border: rgba(255,255,255,0.07);
+    --white: #f4f0e8;
+    --cream: #e8e2d4;
+    --accent: #d4a853;
+    --accent2: #c44b2b;
+    --muted: rgba(244,240,232,0.4);
+    --font-display: 'Bebas Neue', sans-serif;
+    --font-serif: 'DM Serif Display', serif;
+    --font-body: 'Syne', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background 0.3s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    width: 36px; height: 36px;
+    border: 1px solid var(--accent);
+    border-radius: 50%;
+    position: fixed;
+    top: 0; left: 0;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.15s ease;
+    opacity: 0.6;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9000;
+    opacity: 0.35;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    padding: 1.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(20px);
+    background: rgba(8,8,8,0.7);
+  }
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links {
+    display: flex; gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--black);
+    background: var(--accent);
+    padding: 0.6rem 1.4rem;
+    text-decoration: none;
+    transition: background 0.3s ease;
+  }
+  .nav-cta:hover { background: var(--cream); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 3rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: 
+      radial-gradient(ellipse 80% 60% at 70% 40%, rgba(212,168,83,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 20% 80%, rgba(196,75,43,0.05) 0%, transparent 50%),
+      linear-gradient(180deg, #080808 0%, #0a0a0a 100%);
+    z-index: 0;
+  }
+
+  /* Animated film strip lines */
+  .hero-lines {
+    position: absolute; top: 0; right: 8%; height: 100%;
+    display: flex; gap: 3px; z-index: 0; opacity: 0.04;
+  }
+  .hero-lines span {
+    width: 1px; height: 100%;
+    background: var(--white);
+    animation: linePulse 4s ease-in-out infinite;
+  }
+  .hero-lines span:nth-child(2) { animation-delay: 0.5s; }
+  .hero-lines span:nth-child(3) { animation-delay: 1s; }
+  @keyframes linePulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+
+  .hero-tag {
+    position: relative; z-index: 1;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--accent);
+  }
+
+  .hero-name {
+    position: relative; z-index: 1;
+    font-family: var(--font-display);
+    font-size: clamp(5rem, 14vw, 14rem);
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    animation: fadeUp 1s ease forwards;
+    opacity: 0;
+  }
+  .hero-name .outline {
+    -webkit-text-stroke: 1px rgba(244,240,232,0.25);
+    color: transparent;
+  }
+
+  .hero-sub {
+    position: relative; z-index: 1;
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+    color: var(--muted);
+    margin-top: 1.2rem;
+    animation: fadeUp 1s ease 0.2s forwards;
+    opacity: 0;
+  }
+  .hero-sub em { color: var(--accent); font-style: normal; }
+
+  .hero-scroll {
+    position: absolute; bottom: 3rem; right: 3rem;
+    z-index: 1;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    animation: fadeUp 1s ease 0.5s forwards;
+    opacity: 0;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse { 0%,100%{transform:scaleY(1);opacity:0.6} 50%{transform:scaleY(1.3);opacity:1} }
+
+  .hero-stats {
+    position: absolute; right: 3rem; top: 50%; transform: translateY(-50%);
+    z-index: 1;
+    display: flex; flex-direction: column; gap: 2rem;
+    animation: fadeUp 1s ease 0.4s forwards;
+    opacity: 0;
+  }
+  .stat {
+    text-align: right;
+    border-right: 1px solid var(--accent);
+    padding-right: 1rem;
+  }
+  .stat-num {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(30px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    background: var(--off-black);
+    padding: 1rem 0;
+    overflow: hidden;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 20s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    letter-spacing: 0.15em;
+    padding: 0 2rem;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .marquee-item span { color: var(--accent); margin-right: 2rem; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  /* SECTION BASICS */
+  section { padding: 7rem 3rem; }
+  .section-label {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 1rem;
+  }
+  .section-label::before {
+    content: '';
+    width: 30px; height: 1px;
+    background: var(--accent);
+  }
+  .section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    line-height: 1;
+    letter-spacing: 0.03em;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+
+  /* ABOUT */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    margin-top: 4rem;
+  }
+  .about-left p {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .about-left p strong { color: var(--white); font-weight: 600; }
+  .about-left p em { color: var(--accent); font-style: normal; }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+  .tool-item {
+    background: var(--card);
+    padding: 1.2rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    transition: all 0.3s ease;
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .tool-item::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .tool-item:hover { background: rgba(212,168,83,0.06); color: var(--white); }
+
+  .about-right {
+    position: relative;
+  }
+  .about-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 3rem;
+    position: relative;
+  }
+  .about-card::before {
+    content: '"';
+    font-family: var(--font-serif);
+    font-size: 8rem;
+    color: var(--accent);
+    opacity: 0.15;
+    position: absolute;
+    top: -1.5rem; left: 1.5rem;
+    line-height: 1;
+  }
+  .about-card blockquote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.3rem;
+    line-height: 1.6;
+    color: var(--cream);
+    margin-bottom: 2rem;
+  }
+  .about-card-footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .accent-corner {
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 40px; height: 40px;
+    background: var(--accent);
+  }
+
+  /* SERVICES */
+  .services-section { background: var(--off-black); }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .service-card {
+    background: var(--card);
+    padding: 2.5rem 2rem;
+    transition: background 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+  .service-card:hover { background: rgba(212,168,83,0.04); }
+  .service-card:hover::after { width: 100%; }
+
+  .service-icon {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    display: block;
+  }
+  .service-num {
+    font-family: var(--font-display);
+    font-size: 5rem;
+    color: rgba(244,240,232,0.04);
+    position: absolute;
+    top: 1rem; right: 1.5rem;
+    line-height: 1;
+  }
+  .service-title {
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 1rem;
+  }
+  .service-desc {
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .service-tags {
+    display: flex; flex-wrap: wrap; gap: 0.4rem;
+    margin-top: 1.5rem;
+  }
+  .tag {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(212,168,83,0.3);
+    padding: 0.2rem 0.6rem;
+  }
+
+  /* NICHES */
+  .niches-section {}
+  .niches-list {
+    margin-top: 4rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .niche-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--border);
+    cursor: default;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .niche-row::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(212,168,83,0.03));
+    transform: translateX(-100%);
+    transition: transform 0.4s ease;
+  }
+  .niche-row:hover::before { transform: translateX(0); }
+  .niche-row:hover .niche-name { color: var(--accent); }
+
+  .niche-num {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .niche-name {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 3.5vw, 3rem);
+    letter-spacing: 0.04em;
+    color: var(--white);
+    transition: color 0.3s ease;
+  }
+  .niche-desc {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-align: right;
+    max-width: 200px;
+  }
+
+  /* PROCESS */
+  .process-section { background: var(--off-black); }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+    border: 1px solid var(--border);
+  }
+  .process-step {
+    padding: 3rem 2rem;
+    border-right: 1px solid var(--border);
+    position: relative;
+    transition: background 0.3s ease;
+  }
+  .process-step:last-child { border-right: none; }
+  .process-step:hover { background: rgba(212,168,83,0.03); }
+  .step-num {
+    font-family: var(--font-display);
+    font-size: 4rem;
+    color: rgba(212,168,83,0.15);
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  .step-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    margin-bottom: 0.8rem;
+  }
+  .step-desc {
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* PRICING */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin-top: 4rem;
+  }
+  .pricing-card {
+    background: var(--card);
+    padding: 3rem 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
+  .pricing-card.featured {
+    background: rgba(212,168,83,0.07);
+  }
+  .pricing-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: 1.5rem; right: -2.5rem;
+    background: var(--accent);
+    color: var(--black);
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    padding: 0.3rem 3rem;
+    transform: rotate(45deg);
+  }
+  .pricing-tier {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .pricing-price {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .pricing-price sup {
+    font-size: 1.5rem;
+    vertical-align: super;
+  }
+  .pricing-unit {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+  .pricing-features {
+    list-style: none;
+    display: flex; flex-direction: column; gap: 0.8rem;
+    margin-bottom: 2.5rem;
+  }
+  .pricing-features li {
+    font-size: 0.8rem;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 0.7rem;
+  }
+  .pricing-features li::before {
+    content: '→';
+    color: var(--accent);
+    font-family: var(--font-mono);
+    flex-shrink: 0;
+  }
+  .pricing-btn {
+    display: block;
+    width: 100%;
+    padding: 0.9rem;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    transition: all 0.3s ease;
+  }
+  .pricing-btn:hover, .pricing-card.featured .pricing-btn {
+    background: var(--accent);
+    color: var(--black);
+  }
+  .pricing-card.featured .pricing-btn:hover {
+    background: var(--cream);
+    border-color: var(--cream);
+  }
+
+  /* CONTACT */
+  .contact-section {
+    background: var(--off-black);
+    border-top: 1px solid var(--border);
+  }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    margin-top: 4rem;
+  }
+  .contact-big {
+    font-family: var(--font-display);
+    font-size: clamp(3rem, 7vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    margin-bottom: 2rem;
+  }
+  .contact-big span { color: var(--accent); }
+  .contact-intro {
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    max-width: 380px;
+  }
+
+  .contact-links {
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .contact-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 0;
+    border-bottom: 1px solid var(--border);
+    text-decoration: none;
+    color: var(--white);
+    transition: all 0.3s ease;
+    group: true;
+  }
+  .contact-link:hover { padding-left: 0.5rem; }
+  .contact-link:hover .cl-label { color: var(--accent); }
+  .contact-link:hover .cl-arrow { color: var(--accent); }
+  .cl-left { display: flex; align-items: center; gap: 1.2rem; }
+  .cl-platform {
+    font-family: var(--font-mono);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    width: 80px;
+  }
+  .cl-label {
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--white);
+    transition: color 0.3s ease;
+  }
+  .cl-arrow {
+    font-size: 1rem;
+    color: var(--muted);
+    transition: all 0.3s ease;
+  }
+
+  .contact-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .contact-form {
+    display: flex; flex-direction: column; gap: 0;
+  }
+  .form-row {
+    position: relative;
+    border-bottom: 1px solid var(--border);
+  }
+  .form-row:first-child { border-top: 1px solid var(--border); }
+  .form-row input,
+  .form-row textarea,
+  .form-row select {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 1.4rem 0;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    color: var(--white);
+    resize: none;
+    appearance: none;
+  }
+  .form-row input::placeholder,
+  .form-row textarea::placeholder {
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .form-row select option { background: var(--card); }
+  .form-row::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 0;
+    width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.4s ease;
+  }
+  .form-row:focus-within::after { width: 100%; }
+  .form-submit {
+    margin-top: 2rem;
+    padding: 1.1rem 2rem;
+    background: var(--accent);
+    color: var(--black);
+    border: none;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: background 0.3s ease;
+    align-self: flex-start;
+  }
+  .form-submit:hover { background: var(--cream); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .footer-logo span { color: var(--accent); }
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  .footer-back {
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .footer-back:hover { color: var(--accent); }
+
+  /* ANIMATIONS on scroll */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* responsive tweaks */
+  @media (max-width: 900px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 5rem 1.5rem; }
+    .hero { padding: 0 1.5rem 4rem; }
+    .hero-stats { display: none; }
+    .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid, .pricing-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">HAM<span>ZA</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#niches">Niches</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Let's Work</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-lines">
+    <span></span><span></span><span></span>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">3+</div>
+      <div class="stat-label">Years Exp.</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Projects</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Revisions</div>
+    </div>
+  </div>
+
+  <div class="hero-tag">Video Editor & Content Creator</div>
+  <h1 class="hero-name">
+    HAMZA<br><span class="outline">EDITS.</span>
+  </h1>
+  <p class="hero-sub">
+    Turning raw footage into <em>cinematic stories</em> — <br>
+    Long-form documentaries to short-form viral content.
+  </p>
+
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item"><span>✦</span> Adobe Premiere Pro</span>
+    <span class="marquee-item"><span>✦</span> After Effects</span>
+    <span class="marquee-item"><span>✦</span> Adobe Audition</span>
+    <span class="marquee-item"><span>✦</span> Color Grading</span>
+    <span class="marquee-item"><span>✦</span> Motion Graphics</span>
+    <span class="marquee-item"><span>✦</span> YouTube Long-Form</span>
+    <span class="marquee-item"><span>✦</span> Reels & Shorts</span>
+    <span class="marquee-item"><span>✦</span> Podcast Editing</span>
+    <span class="marquee-item"><span>✦</span> Sound Design</span>
+    <span class="marquee-item"><span>✦</span> Adobe Premiere Pro</span>
+    <span class="marquee-item"><span>✦</span> After Effects</span>
+    <span class="marquee-item"><span>✦</span> Adobe Audition</span>
+    <span class="marquee-item"><span>✦</span> Color Grading</span>
+    <span class="marquee-item"><span>✦</span> Motion Graphics</span>
+    <span class="marquee-item"><span>✦</span> YouTube Long-Form</span>
+    <span class="marquee-item"><span>✦</span> Reels & Shorts</span>
+    <span class="marquee-item"><span>✦</span> Podcast Editing</span>
+    <span class="marquee-item"><span>✦</span> Sound Design</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">About Me</div>
+  <h2 class="section-title reveal">The Editor<br>Behind the Frame</h2>
+
+  <div class="about-grid">
+    <div class="about-left reveal">
+      <p>I'm <strong>Hamza</strong> — a freelance video editor based in <em>Karachi, Pakistan</em> with 3+ years of professional experience crafting content that actually gets watched.</p>
+      <p>I work with creators, brands, and businesses across the globe, specializing in everything from <strong>high-retention YouTube documentaries</strong> to <strong>viral short-form reels</strong> across multiple niches.</p>
+      <p>My editing isn't just cuts and transitions — it's <em>storytelling</em>. Every second on screen should earn its place.</p>
+
+      <div class="tools-grid">
+        <div class="tool-item">Premiere Pro</div>
+        <div class="tool-item">After Effects</div>
+        <div class="tool-item">Adobe Audition</div>
+        <div class="tool-item">Color Grading</div>
+        <div class="tool-item">Motion Graphics</div>
+        <div class="tool-item">Sound Design</div>
+      </div>
+    </div>
+
+    <div class="about-right reveal reveal-delay-2">
+      <div class="about-card">
+        <blockquote>
+          "Every frame is a decision. Every cut is intentional. I don't just edit — I engineer the emotion the audience feels."
+        </blockquote>
+        <div class="about-card-footer">
+          Hamza · Freelance Video Editor · Karachi, PK
+        </div>
+        <div class="accent-corner"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="services-section">
+  <div class="section-label">What I Do</div>
+  <h2 class="section-title reveal">Services &<br>Specializations</h2>
+
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-icon">🎬</span>
+      <div class="service-num">01</div>
+      <div class="service-title">Long-Form Video Editing</div>
+      <p class="service-desc">Full production editing for YouTube videos, documentaries, interviews, vlogs, and course content. Retention-optimized pacing with storytelling at the core.</p>
+      <div class="service-tags">
+        <span class="tag">YouTube</span>
+        <span class="tag">Documentary</span>
+        <span class="tag">Vlogs</span>
+        <span class="tag">Courses</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal reveal-delay-1">
+      <span class="service-icon">⚡</span>
+      <div class="service-num">02</div>
+      <div class="service-title">Short-Form Content</div>
+      <p class="service-desc">High-impact Reels, TikToks, and YouTube Shorts designed for maximum watch time and virality. Fast cuts, captions, sound design — the full package.</p>
+      <div class="service-tags">
+        <span class="tag">Reels</span>
+        <span class="tag">TikTok</span>
+        <span class="tag">Shorts</span>
+        <span class="tag">Viral</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal reveal-delay-2">
+      <span class="service-icon">🎙️</span>
+      <div class="service-num">03</div>
+      <div class="service-title">Podcast Editing</div>
+      <p class="service-desc">Audio cleanup, noise removal, music mixing, and dynamic video versions of your podcast. Professional sound that keeps listeners coming back.</p>
+      <div class="service-tags">
+        <span class="tag">Audio</span>
+        <span class="tag">Podcast</span>
+        <span class="tag">Interviews</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal">
+      <span class="service-icon">✨</span>
+      <div class="service-num">04</div>
+      <div class="service-title">Motion Graphics</div>
+      <p class="service-desc">Custom intros, lower thirds, transitions, and animated elements built in After Effects. Elevate your brand identity across every video.</p>
+      <div class="service-tags">
+        <span class="tag">After Effects</span>
+        <span class="tag">Intros</span>
+        <span class="tag">Animations</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal reveal-delay-1">
+      <span class="service-icon">🎨</span>
+      <div class="service-num">05</div>
+      <div class="service-title">Color Grading</div>
+      <p class="service-desc">Cinematic color grading and LUT creation to give your footage a professional, consistent look that matches your brand's visual identity.</p>
+      <div class="service-tags">
+        <span class="tag">Color</span>
+        <span class="tag">LUTs</span>
+        <span class="tag">Grade</span>
+      </div>
+    </div>
+
+    <div class="service-card reveal reveal-delay-2">
+      <span class="service-icon">📱</span>
+      <div class="service-num">06</div>
+      <div class="service-title">Social Media Repurposing</div>
+      <p class="service-desc">Turn one long-form video into 5–10 pieces of short content for Instagram, TikTok, YouTube, and LinkedIn. Maximum reach, minimum effort on your end.</p>
+      <div class="service-tags">
+        <span class="tag">Repurpose</span>
+        <span class="tag">Multi-Platform</span>
+        <span class="tag">Strategy</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NICHES -->
+<section id="niches">
+  <div class="section-label">My Niches</div>
+  <h2 class="section-title reveal">Industries I<br>Work With</h2>
+
+  <div class="niches-list">
+    <div class="niche-row reveal">
+      <span class="niche-num">01</span>
+      <span class="niche-name">PERSONAL FINANCE</span>
+      <span class="niche-desc">Investing, budgeting & wealth building</span>
+    </div>
+    <div class="niche-row reveal">
+      <span class="niche-num">02</span>
+      <span class="niche-name">TECH & STARTUPS</span>
+      <span class="niche-desc">Product demos, reviews & thought leadership</span>
+    </div>
+    <div class="niche-row reveal">
+      <span class="niche-num">03</span>
+      <span class="niche-name">FITNESS & HEALTH</span>
+      <span class="niche-desc">Workout content, transformation reels</span>
+    </div>
+    <div class="niche-row reveal">
+      <span class="niche-num">04</span>
+      <span class="niche-name">BUSINESS & MINDSET</span>
+      <span class="niche-desc">Entrepreneurship, coaching & education</span>
+    </div>
+    <div class="niche-row reveal">
+      <span class="niche-num">05</span>
+      <span class="niche-name">LIFESTYLE & VLOGGING</span>
+      <span class="niche-desc">Travel, day-in-life & brand storytelling</span>
+    </div>
+    <div class="niche-row reveal">
+      <span class="niche-num">06</span>
+      <span class="niche-name">EDUCATION & COURSES</span>
+      <span class="niche-desc">eLearning, tutorials & explainer videos</span>
+    </div>
+    <div class="niche-row reveal">
+      <span class="niche-num">07</span>
+      <span class="niche-name">REAL ESTATE</span>
+      <span class="niche-desc">Property showcases & agent branding</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process" class="process-section">
+  <div class="section-label">How It Works</div>
+  <h2 class="section-title reveal">My Editing<br>Process</h2>
+
+  <div class="process-steps">
+    <div class="process-step reveal">
+      <div class="step-num">01</div>
+      <div class="step-title">Brief & Discovery</div>
+      <p class="step-desc">We align on your vision, target audience, style references, and deliverables. No assumptions — just clarity.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-1">
+      <div class="step-num">02</div>
+      <div class="step-title">Rough Cut</div>
+      <p class="step-desc">First assembly with pacing, structure, and story locked in. You review before we go further.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-2">
+      <div class="step-num">03</div>
+      <div class="step-title">Polish & Grade</div>
+      <p class="step-desc">Color grading, sound design, motion graphics, captions, and music are layered in to completion.</p>
+    </div>
+    <div class="process-step reveal reveal-delay-3">
+      <div class="step-num">04</div>
+      <div class="step-title">Deliver & Support</div>
+      <p class="step-desc">Final files delivered in your preferred format. Revisions included. Always on time.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="section-label">Investment</div>
+  <h2 class="section-title reveal">Simple,<br>Transparent Pricing</h2>
+
+  <div class="pricing-grid">
+    <div class="pricing-card reveal">
+      <div class="pricing-tier">Starter</div>
+      <div class="pricing-price"><sup>$</sup>80</div>
+      <div class="pricing-unit">per short-form video</div>
+      <ul class="pricing-features">
+        <li>Reel / TikTok / Short (60–90s)</li>
+        <li>Captions & subtitles</li>
+        <li>Music & SFX</li>
+        <li>2 revisions</li>
+        <li>48hr turnaround</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Get Started</a>
+    </div>
+
+    <div class="pricing-card featured reveal reveal-delay-1">
+      <div class="pricing-tier">Pro</div>
+      <div class="pricing-price"><sup>$</sup>250</div>
+      <div class="pricing-unit">per long-form video</div>
+      <ul class="pricing-features">
+        <li>YouTube video (10–30 min)</li>
+        <li>Full color grading</li>
+        <li>Motion graphics & b-roll</li>
+        <li>Sound design & music</li>
+        <li>Unlimited revisions</li>
+        <li>5–7 day turnaround</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Get Started</a>
+    </div>
+
+    <div class="pricing-card reveal reveal-delay-2">
+      <div class="pricing-tier">Retainer</div>
+      <div class="pricing-price"><sup>$</sup>600</div>
+      <div class="pricing-unit">per month</div>
+      <ul class="pricing-features">
+        <li>4 long-form OR 12 short-form</li>
+        <li>Priority turnaround</li>
+        <li>Dedicated editor (me)</li>
+        <li>Monthly strategy call</li>
+        <li>Content repurposing included</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">Let's Talk</a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="section-label">Contact</div>
+
+  <div class="contact-grid">
+    <div>
+      <h2 class="contact-big reveal">
+        Let's Build<br>Something <span>Great.</span>
+      </h2>
+      <p class="contact-intro reveal">
+        Whether you're a creator, brand, or agency — I'm open to new projects, collaborations, and conversations. Reach out through any channel below.
+      </p>
+
+      <div class="contact-links reveal">
+        <a href="mailto:hamza@email.com" class="contact-link">
+          <div class="cl-left">
+            <span class="cl-platform">Email</span>
+            <span class="cl-label">hamza@email.com</span>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a href="https://upwork.com/freelancers/hamza" target="_blank" class="contact-link">
+          <div class="cl-left">
+            <span class="cl-platform">Upwork</span>
+            <span class="cl-label">Hamza — Top Rated</span>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a href="https://instagram.com/hamza.edits" target="_blank" class="contact-link">
+          <div class="cl-left">
+            <span class="cl-platform">Instagram</span>
+            <span class="cl-label">@hamza.edits</span>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a href="https://linkedin.com/in/hamza" target="_blank" class="contact-link">
+          <div class="cl-left">
+            <span class="cl-platform">LinkedIn</span>
+            <span class="cl-label">Hamza — Video Editor</span>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+        <a href="https://wa.me/923001234567" target="_blank" class="contact-link">
+          <div class="cl-left">
+            <span class="cl-platform">WhatsApp</span>
+            <span class="cl-label">+92 300 123 4567</span>
+          </div>
+          <span class="cl-arrow">↗</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="contact-right reveal reveal-delay-1">
+      <div class="contact-form">
+        <div class="form-row">
+          <input type="text" placeholder="Your Name" />
+        </div>
+        <div class="form-row">
+          <input type="email" placeholder="Email Address" />
+        </div>
+        <div class="form-row">
+          <select style="color:rgba(244,240,232,0.4); font-family: var(--font-mono); font-size:0.7rem; letter-spacing:0.08em; text-transform:uppercase; padding:1.4rem 0;">
+            <option value="" disabled selected>Project Type</option>
+            <option>Short-Form Content (Reels/Shorts)</option>
+            <option>Long-Form YouTube Video</option>
+            <option>Podcast Editing</option>
+            <option>Monthly Retainer</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <textarea rows="4" placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button class="form-submit" onclick="alert('Message sent! I\'ll get back to you within 24 hours.')">
+          Send Message →
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">HAM<span>ZA</span></div>
+  <div class="footer-copy">© 2025 Hamza · Video Editor · Karachi, Pakistan</div>
+  <a href="#home" class="footer-back">Back to Top ↑</a>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  document.querySelectorAll('a, button, .service-card, .niche-row, .pricing-card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      ring.style.width = '60px';
+      ring.style.height = '60px';
+      ring.style.borderColor = 'var(--accent)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '10px';
+      cursor.style.height = '10px';
+      ring.style.width = '36px';
+      ring.style.height = '36px';
+      ring.style.borderColor = 'var(--accent)';
+    });
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Smooth scroll for nav links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+  });
+
+  // Parallax hero name very subtle
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const heroName = document.querySelector('.hero-name');
+    if (heroName && scrollY < window.innerHeight) {
+      heroName.style.transform = `translateY(${scrollY * 0.15}px)`;
+    }
+  });
+</script>
+</body>
+</html>
