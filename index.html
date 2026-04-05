@@ -519,8 +519,8 @@
       <h2 class="contact-big reveal">Let's Build<br>Something <span>Great.</span></h2>
       <p class="contact-intro reveal">Whether you're a creator, brand, or agency &mdash; I'm open to new projects, collaborations, and long-term partnerships. Find me on any platform below.</p>
       <div class="contact-links reveal">
-        <a href="/cdn-cgi/l/email-protection#abc3cac6d1cac6caccd8c29b99ebccc6cac2c785c8c4c6" class="contact-link">
-          <div class="cl-left"><span class="cl-platform">Email</span><span class="cl-label"><span class="__cf_email__" data-cfemail="e28a838f98838f8385918bd2d0a2858f838b8ecc818d8f">[email&#160;protected]</span></span></div>
+        <a href="mailto:hamzamagsi02@gmail.com" class="contact-link">
+          <div class="cl-left"><span class="cl-platform">Email</span><span class="cl-label">hamzamagsi02@gmail.com</span></div>
           <span class="cl-arrow">&#8599;</span>
         </a>
         <a href="https://www.upwork.com/freelancers/~01ea6e2d92f6f7520e" target="_blank" class="contact-link">
@@ -576,7 +576,7 @@
   <a href="#home" class="footer-back">Back to Top &uarr;</a>
 </footer>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
   // Custom cursor
   var cursor = document.getElementById('cursor');
   var ring   = document.getElementById('cursorRing');
@@ -648,9 +648,17 @@
       'Looking forward to working with you!'
     );
 
-    var gmailURL = 'https://mail.google.com/mail/?view=cm&fs=1&to=hamzamagsi02@gmail.com&su=' + subject + '&body=' + body;
-    window.open(gmailURL, '_blank');
+    window.location.href = 'mailto:hamzamagsi02@gmail.com?subject=' + subject + '&body=' + body;
 
     feedback.style.display = 'block';
     feedback.style.color   = '#d4a853';
-    feedback.textContent   = 'Gmail is opening in a new tab — just hit Send!';
+    feedback.textContent   = 'Your mail app is opening - just hit Send!';
+
+    document.getElementById('cf-name').value    = '';
+    document.getElementById('cf-email').value   = '';
+    document.getElementById('cf-type').value    = '';
+    document.getElementById('cf-message').value = '';
+  });
+</script>
+</body>
+</html>
